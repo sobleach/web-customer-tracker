@@ -30,4 +30,16 @@ public class CustomerServiceImpl implements ICustomerService {
 		iCustomerDAO.saveCustomer(theCustomer);
 	}
 
+	@Override
+	@Transactional
+	public Customer getCustomers(int theId) {
+		return iCustomerDAO.getCustomers(theId);
+	}
+
+	@Override
+	@Transactional
+	public void deleteCustomer(int theId) {
+		iCustomerDAO.deleteCustomer(theId);
+	}
+
 }
