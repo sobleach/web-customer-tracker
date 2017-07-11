@@ -49,10 +49,10 @@ public class CustomerDAOImpl implements ICustomerDAO {
 	public Customer getCustomers(int theId) {
 
 		// get current hibernate ssession
-		Session currentSesson = sessionFactory.getCurrentSession();
+		Session currentSession = sessionFactory.getCurrentSession();
 
 		// now retrieve/read from database using the primary key
-		Customer theCustomer = currentSesson.get(Customer.class, theId);
+		Customer theCustomer = currentSession.get(Customer.class, theId);
 
 		return theCustomer;
 	}
@@ -61,13 +61,45 @@ public class CustomerDAOImpl implements ICustomerDAO {
 	public void deleteCustomer(int theId) {
 
 		// get the current hibernate session
-		Session currentSesson = sessionFactory.getCurrentSession();
+		Session currentSession = sessionFactory.getCurrentSession();
 
 		// delete object with primary key
-		Query theQuery = currentSesson.createQuery("delete from Customer where id=:customerId");
+		Query theQuery = currentSession.createQuery("delete from Customer where id=:customerId");
 		theQuery.setParameter("customerId", theId);
 
 		theQuery.executeUpdate();
+	}
+
+	@Override
+	public List<Customer> searchCustomers(String theSearchName) {
+
+		// get the current hibernate session
+		Session currentSession = sessionFactory.getCurrentSession();
+
+		Query theQuery = null;
+
+		//
+		// only search by name if theSearchName is not empty
+		//
+		if (theSearchName != null && theSearchName.trim().length() > 0) {
+
+			// search for firstName or lastName ... case insensitive
+			theQuery = currentSession.createQuery(
+					"from Customer where lower(firstName) like :theName or lower(lastName) like :theName",
+					Customer.class);
+			theQuery.setParameter("theName", "%" + theSearchName.toLowerCase() + "%");
+
+		} else {
+			// theSearchName is empty ... so just get all customers
+			theQuery = currentSession.createQuery("from Customer", Customer.class);
+		}
+
+		// execute query and get result list
+		List<Customer> customers = theQuery.getResultList();
+
+		// return the results
+		return customers;
+
 	}
 
 }

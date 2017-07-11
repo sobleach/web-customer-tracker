@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.thum.springdemo.entity.Customer;
+import com.thum.springdemo.service.CustomerServiceImpl;
 import com.thum.springdemo.service.ICustomerService;
 
 @Controller
@@ -69,10 +70,22 @@ public class CustomerController {
 
 	@GetMapping("/delete")
 	public String deleteCustomer(@RequestParam("customerId") int theId) {
-		
+
 		// delete the customer
 		iCustomerService.deleteCustomer(theId);
-		
+
 		return "redirect:/customer/list";
+	}
+
+	@PostMapping("/search")
+	public String searchCustomer(@RequestParam("theSearchName") String theSearchName, Model theModel) {
+
+		// search customers from the service
+		List<Customer> theCustomers = iCustomerService.searchCustomers(theSearchName);
+
+		// add the customers to the model
+		theModel.addAttribute("customers", theCustomers);
+
+		return "list-customers";
 	}
 }
