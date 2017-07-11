@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.thum.springdemo.entity.Customer;
-import com.thum.springdemo.service.CustomerServiceImpl;
 import com.thum.springdemo.service.ICustomerService;
 
 @Controller
